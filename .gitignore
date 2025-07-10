@@ -1,0 +1,90 @@
+# ================
+# Unity Core Folders
+# ================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+UserSettings/
+.gradle/
+
+# ================
+# IDE/Editor Stuff
+# ================
+.vscode/
+.idea/
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ================
+# Build Artifacts
+# ================
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.dll
+*.dylib
+*.so
+
+# ================
+# System Junk
+# ================
+.DS_Store
+Thumbs.db
+sysinfo.txt
+mono_crash.*
+
+# ================
+# Visual Scripting Generated Files
+# ================
+/Assets/Unity.VisualScripting.Generated/
+
+# ================
+# JetBrains Rider Plugin
+# ================
+/Assets/Plugins/Editor/JetBrains*
+
+# ================
+# Addressables & StreamingAssets (Binary)
+# ================
+/Assets/StreamingAssets/aa.meta
+/Assets/StreamingAssets/aa/*
+/Assets/AddressableAssetsData/*/*.bin*
+
+# ================
+# Blender Backups
+# ================
+*.blend1
+*.blend1.meta
+
+# ================
+# Optional Backup or Scratch Folders
+# ================
+[Bb]ackups/
+*.bak
+*.old
+*.swp
+/Library/
+/Temp/
+/Build/
+/Builds/
+/.vs/
