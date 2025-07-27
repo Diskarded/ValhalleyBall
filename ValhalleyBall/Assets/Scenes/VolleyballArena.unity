@@ -867,10 +867,10 @@ MonoBehaviour:
   fallMultiplier: 2.2
   lowJumpMultiplier: 2
   hitForce: 10
-  ballController: {fileID: 0}
-  ballTransform: {fileID: 0}
-  netTransform: {fileID: 0}
-  bumpOverrideAngle: 100
+  ballController: {fileID: 1449227143}
+  ballTransform: {fileID: 1449227142}
+  netTransform: {fileID: 981418084}
+  bumpOverrideAngle: 50
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
