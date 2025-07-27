@@ -6,32 +6,37 @@ public class PlayerController : MonoBehaviour
     private const string BallHitDebugMessage = "Ball hit triggered!";
 
     // --- Movement Variables ---
-    public float moveSpeed = 5f;          // Player movement speed
-    public float deceleration = 20f;      // Rate at which player slows down when no input is given
-    public float jumpForce = 8f;          // Force applied when the player jumps
-    public float fallMultiplier = 3f;     // Gravity multiplier for faster falling
-    public float lowJumpMultiplier = 2f;  // Gravity multiplier for shorter jumps
+    public float moveSpeed = 5f;
+    public float deceleration = 20f;
+    public float jumpForce = 8f;
+    public float fallMultiplier = 3f;
+    public float lowJumpMultiplier = 2f;
 
+    // --- Ball Hit Variables ---
+    public float hitForce = 10f;
+    private bool hitKeyPressed = false;
 
-// --- Ball Hit Variables ---
-public float hitForce = 10f;          // Force applied to the ball when hit
-    private bool hitKeyPressed = false;   // Flag to track if the player has pressed F
+    // --- Smart Bump Variables ---
+    [Header("Ball Bump Setup")]
+    public BallController ballController;
+    public Transform ballTransform;
+    public Transform netTransform;
 
-    private Rigidbody rb;                 // Cached Rigidbody component
-    private bool isGrounded = false;      // Whether the player is on the ground
+    [Header("Bump Override Settings")]
+    public float bumpOverrideAngle = 100f;
+
+    private Rigidbody rb;
+    private bool isGrounded = false;
 
     void Start()
     {
-        // Get the Rigidbody component attached to this GameObject
         rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        // --- Handle Player Movement ---
-        float horizontal = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right arrow
-        float vertical = Input.GetAxisRaw("Vertical");     // W/S or Up/Down arrow
-
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
         Vector3 moveInput = new Vector3(horizontal, 0, vertical).normalized;
         Vector3 currentVelocity = rb.linearVelocity;
 
@@ -57,14 +62,12 @@ public float hitForce = 10f;          // Force applied to the ball when hit
             }
         }
 
-        // --- Handle Jumping ---
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
 
-        // --- Apply Better Gravity ---
         if (!isGrounded)
         {
             if (rb.linearVelocity.y < 0)
@@ -77,7 +80,6 @@ public float hitForce = 10f;          // Force applied to the ball when hit
             }
         }
 
-        // --- Detect F Key for Ball Hit ---
         if (Input.GetKeyDown(KeyCode.F))
         {
             hitKeyPressed = true;
@@ -86,18 +88,25 @@ public float hitForce = 10f;          // Force applied to the ball when hit
 
     void OnTriggerStay(Collider other)
     {
-        // Check if the collider is tagged as the Ball and if the player pressed F
         if (other.CompareTag("Ball") && hitKeyPressed)
         {
-            Debug.Log("Ball hit triggered!");
+            Debug.Log(BallHitDebugMessage);
 
-            Rigidbody ballRb = other.GetComponent<Rigidbody>();
-            if (ballRb != null)
+            Vector3 toBall = (ballTransform.position - transform.position).normalized;
+            Vector3 toNet = (netTransform.position - transform.position).normalized;
+            Vector3 playerForward = transform.forward;
+
+            float angleToBall = Vector3.Angle(playerForward, toBall);
+            float angleAwayFromNet = Vector3.Angle(playerForward, -toNet);
+
+            Vector3 bumpDirection = toBall;
+
+            if (angleToBall < 45f && angleAwayFromNet > bumpOverrideAngle)
             {
-                Vector3 hitDirection = ((other.transform.position - transform.position).normalized + Vector3.up * 0.5f).normalized;
-                ballRb.AddForce(hitDirection * hitForce, ForceMode.Impulse);
+                bumpDirection = toNet;
             }
 
+            ballController.Bump(bumpDirection);
             hitKeyPressed = false;
         }
     }
@@ -113,21 +122,29 @@ public float hitForce = 10f;          // Force applied to the ball when hit
             }
         }
     }
+
     public void HandleHitTrigger(Collider other)
     {
         if (other.CompareTag("Ball") && hitKeyPressed)
         {
             Debug.Log(BallHitDebugMessage);
 
-            Rigidbody ballRb = other.GetComponent<Rigidbody>();
-            if (ballRb != null)
+            Vector3 toBall = (ballTransform.position - transform.position).normalized;
+            Vector3 toNet = (netTransform.position - transform.position).normalized;
+            Vector3 playerForward = transform.forward;
+
+            float angleToBall = Vector3.Angle(playerForward, toBall);
+            float angleAwayFromNet = Vector3.Angle(playerForward, -toNet);
+
+            Vector3 bumpDirection = toBall;
+
+            if (angleToBall < 45f && angleAwayFromNet > bumpOverrideAngle)
             {
-                Vector3 hitDirection = ((other.transform.position - transform.position).normalized + Vector3.up * 0.5f).normalized;
-                ballRb.AddForce(hitDirection * hitForce, ForceMode.Impulse);
+                bumpDirection = toNet;
             }
 
+            ballController.Bump(bumpDirection);
             hitKeyPressed = false;
         }
     }
-
 }
