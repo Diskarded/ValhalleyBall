@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ball
   - OOB
+  - Teammate
   layers:
   - Default
   - TransparentFX
