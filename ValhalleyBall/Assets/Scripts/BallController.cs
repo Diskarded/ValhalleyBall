@@ -10,14 +10,31 @@ public class BallController : MonoBehaviour
     [Header("Bump Settings")]
     public float bumpForce = 8f;         // Forward force
     public float bumpLift = 12f;         // Upward force
-
+    
+    [Header("Custom Gravity")]
+    public float gravityUp = -2f;     // Gravity when ball is moving up
+    public float gravityDown = -30f;  // Gravity when ball is falling
+    
     void Awake()
     {
         // This gets the Rigidbody component on the ball
         // It's called once when the object is created or enabled
         rb = GetComponent<Rigidbody>();
     }
-
+    void FixedUpdate()
+    {
+        // Check current vertical motion
+        if (rb.linearVelocity.y > 0)
+        {
+            // Going up — gentle gravity for hangtime
+            rb.AddForce(Vector3.up * gravityUp, ForceMode.Acceleration);
+        }
+        else
+        {
+            // Falling — strong gravity for snap fall
+            rb.AddForce(Vector3.up * gravityDown, ForceMode.Acceleration);
+        }
+    }
     /// <summary>
     /// Call this method to apply an anime-style bump to the ball.
     /// 'direction' is usually based on player position or forward vector.
